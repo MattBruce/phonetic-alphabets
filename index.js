@@ -103,7 +103,7 @@ const phoneticModes = {
     Q: "Quick-win",
     R: "Roadmap",
     S: "Synergy",
-    T: "Touch base",
+    T: "Touch-base",
     U: "Utilisation",
     V: "Vista",
     W: "Workflow",
