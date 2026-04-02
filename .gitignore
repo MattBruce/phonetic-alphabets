@@ -1,0 +1,17 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sensitive SFTP configuration
+.vscode/sftp.json
+
+# Local persistence/temp files
+.gemini/
+node_modules/
+.env

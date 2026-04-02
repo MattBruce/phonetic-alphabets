@@ -1,0 +1,245 @@
+@import url("https://fonts.googleapis.com/css2?family=Flavors&family=Glass+Antiqua&family=SUSE:wght@100..800&family=Tilt+Neon&family=Dancing+Script:wght@400..700&display=swap");
+
+* {
+    box-sizing: border-box;
+}
+
+body,
+html {
+    min-height: 100%;
+    align-content: center;
+}
+
+html {
+    background-color: #333;
+    background: linear-gradient(#444, #222);
+}
+
+body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "SUSE", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+    font-size: clamp(0.75rem, 0.8vw, 2rem);
+}
+
+h1 {
+    color: white;
+    margin-bottom: 0;
+}
+
+section {
+    --gap: 2rem;
+    display: grid;
+    font-family: "SUSE", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    gap: var(--gap);
+    background-color: #fff;
+    padding: 40px;
+    width: clamp(400px, 50vw, 100vw);
+    border-radius: 10px;
+    background: linear-gradient(0deg, #ededed, #ffffff);
+}
+
+#container {
+    display: flex;
+    gap: calc(var(--gap) / 2);
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding-bottom: var(--gap);
+    border-bottom: 1px solid #ccc;
+}
+
+dfn {
+    --dfn-f: black;
+    --dfn-c: #666;
+    background: white;
+    cursor: pointer;
+    font-size: 1.75em;
+    color: var(--dfn-c);
+    font-style: normal;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 0.2rem;
+    padding-inline: 0.5rem;
+}
+
+dfn:first-letter {
+    font-size: 1.3em;
+    color: var(--dfn-f);
+    text-decoration: underline;
+}
+
+input {
+    font-size: 1.5em;
+    padding: 0.5rem;
+    max-width: 100%;
+}
+
+::placeholder {
+    color: #ccc;
+}
+
+output {
+    font-size: 1.5em;
+    padding: 0;
+}
+
+/* */
+@keyframes bounce {
+    0% {
+        transform: scale(0.9);
+    }
+
+    80% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes flip {
+    0% {
+        transform: rotateX(0deg);
+    }
+
+    50% {
+        transform: rotateX(90deg);
+    }
+
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+dfn.run-animation {
+    animation: bounce 0.2s cubic-bezier(0.7, -0.61, 0.39, 1.57);
+}
+
+dfn.flip-animation {
+    animation: flip 0.2s linear;
+}
+
+#modeSelector {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: white;
+    margin: 2rem;
+    display: flex;
+    gap: 2rem;
+    row-gap: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+label {
+    padding: 0.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-width: 0 0 3px 0;
+    line-height: 2em;
+    cursor: pointer;
+}
+
+label:has(input:checked) {
+    border-color: white;
+}
+
+dfn[currentmode="standard"] {
+    --dfn-c: #666;
+    --dfn-f: #296b8b;
+    background: #fff;
+    font-family: "Tilt Neon";
+    font-size: 1.75em;
+}
+
+dfn[currentmode="hipster"] {
+    --dfn-c: #8aa9b3;
+    --dfn-f: #bb4377;
+    background: #f4f4f4;
+    font-family: "Glass Antiqua";
+    font-size: 2.1em;
+}
+
+dfn[currentmode="cursed"] {
+    --dfn-c: #c0392b;
+    --dfn-f: #6ab410;
+    background: #efefef;
+    font-family: "Flavors";
+    font-size: 1.7em;
+}
+
+dfn[currentmode="business"] {
+    font-family: "SUSE";
+    font-size: 1.7em;
+}
+
+dfn[currentmode="insta"] {
+    font-family: "Dancing Script";
+    --dfn-c: #9E9E9E;
+    --dfn-f: hotpink;
+}
+
+
+
+
+.toast {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 999;
+}
+
+.toast.show {
+    opacity: 1;
+    pointer-events: auto;
+    background: #333;
+}
+
+.toast.standard {
+    background: #333;
+}
+
+.toast.hipster {
+    background: #8e44ad;
+    /* Grape kombucha purple */
+}
+
+.toast.cursed {
+    background: #c0392b;
+    /* Hellfire red */
+}
+
+.toast.business {
+    background: blue;
+}
+
+.toast.insta {
+    background: hotpink;
+}
