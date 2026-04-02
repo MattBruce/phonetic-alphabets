@@ -85,8 +85,8 @@ const phoneticModes = {
   },
   business: {
     A: "Actionable",
-    B: "Blue Sky",
-    C: "Circle Back",
+    B: "Blue-sky",
+    C: "Circle-back",
     D: "Deepdive",
     E: "Ecosystem",
     F: "Funnel",
