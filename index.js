@@ -457,7 +457,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // On speak click
         speakButton.addEventListener("click", () => {
-            speakPhonetic(input.value, currentMode);
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            } else {
+                speakPhonetic(input.value, currentMode);
+            }
         });
 
         // Trigger speech on Enter key

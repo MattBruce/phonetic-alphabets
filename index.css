@@ -159,6 +159,9 @@ output {
         font-style: normal;
     }
 }
+output:before {
+    content: "👉 ";
+}
 #speak {
     font-size: 3em;
     cursor: pointer;
