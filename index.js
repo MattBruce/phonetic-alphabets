@@ -228,6 +228,24 @@ function getAlphabet() {
     return phoneticModes[currentMode];
 }
 
+let voices = [];
+
+function loadVoices() {
+    voices = speechSynthesis.getVoices();
+}
+
+loadVoices();
+speechSynthesis.onvoiceschanged = loadVoices;
+
+const voiceMap = {
+    standard: null, // default system voice
+    cursed: (v) => v.name.toLowerCase().includes("daniel") || v.name.toLowerCase().includes("male"),
+    hipster: (v) => v.name.toLowerCase().includes("samantha") || v.lang.includes("en-GB"),
+    business: (v) => v.lang === "en-GB",
+    insta: (v) => v.name.toLowerCase().includes("female") || v.lang.startsWith("en"),
+    techbro: (v) => v.name.toLowerCase().includes("google") || v.lang.includes("en-US")
+};
+
 function toPhonetic(word) {
     return word
         .toUpperCase()
@@ -238,6 +256,67 @@ function toPhonetic(word) {
             return /^[A-Z]$/.test(char) ? translation : `<em>${translation}</em>`;
         })
         .join(" ");
+}
+
+function getPlainPhonetic(word) {
+    return word
+        .toUpperCase()
+        .split("")
+        .map((char) => {
+            return getAlphabet()[char] || char;
+        })
+        .join(" ");
+}
+
+function speakPhonetic(text, mode = "standard") {
+    if (!("speechSynthesis" in window)) return;
+
+    speechSynthesis.cancel();
+    const plain = getPlainPhonetic(text);
+    const paused = plain.split(" ").join(", ");
+    const utterance = new SpeechSynthesisUtterance(paused);
+
+    // Slight mode personality (optional but fun)
+    const settings = {
+        standard: { rate: 1, pitch: 1 },
+        cursed: { rate: 0.85, pitch: 0.7 },
+        hipster: { rate: 0.95, pitch: 1.1 },
+        business: { rate: 1.05, pitch: 0.95 },
+        insta: { rate: 1.2, pitch: 1.3 },
+        techbro: { rate: 1.1, pitch: 0.9 }
+    };
+
+    const cfg = settings[mode] || settings.standard;
+
+    utterance.rate = cfg.rate;
+    utterance.pitch = cfg.pitch;
+
+    // pick voice
+    const voices = speechSynthesis.getVoices();
+
+    const pickVoice = (mode) => {
+        if (!voices.length) return null;
+
+        const nameRules = {
+            cursed: ["daniel", "male", "google uk english male"],
+            hipster: ["samantha", "fiona", "uk english"],
+            business: ["daniel", "uk english", "google uk english male"],
+            insta: ["female", "samantha", "uk english female"],
+            techbro: ["google", "us english", "alex"]
+        };
+
+        const rules = nameRules[mode];
+        if (!rules) return null;
+
+        return voices.find(v =>
+            rules.some(r => v.name.toLowerCase().includes(r))
+        ) || null;
+    };
+
+    const voice = pickVoice(mode);
+    if (voice) utterance.voice = voice;
+
+    speechSynthesis.speak(utterance);
 }
 
 function sleep(ms) {
@@ -331,10 +410,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const modeSelector = document.getElementById("modeSelector");
         const input = document.querySelector("input[type='text']");
         const output = document.querySelector("output");
+        const speakButton = document.getElementById("speak");
         // set mode from URL param if present
         setModeFromURL();
         // init
         await renderPhoneticAlphabet(container);
+
+        // On speak click
+        speakButton.addEventListener("click", () => {
+            speakPhonetic(input.value, currentMode);
+        });
+
         // On <input> change
         input.addEventListener("input", () => {
             const val = input.value;
@@ -365,7 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentMode = document.querySelector('input[name="mode"]:checked')
                     .value;
                 showToast(currentMode);
-                output.innerHTML = "...";
+                output.innerHTML = "";
                 await renderPhoneticAlphabet(container);
                 output.innerHTML = toPhonetic(input.value);
             }
