@@ -1,5 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Flavors&family=Glass+Antiqua&family=SUSE:wght@100..800&family=Tilt+Neon&family=Dancing+Script:wght@400..700&family=Orbitron&display=swap");
 
+:root {
+  --main-bg: #222;
+  --insta: hotpink;
+  --standard: #296b8b;
+  --hipster: #bb4377;
+  --cursed: #6ab410;
+  --business: #0077cc;
+  --techbro: #00bcd4;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -8,11 +18,32 @@ body,
 html {
     min-height: 100%;
     align-content: center;
+    margin:0;
+    padding:0;
 }
 
 html {
     background-color: #333;
-    background: linear-gradient(#444, #222);
+    background: linear-gradient(#111, var(--main-bg));
+}
+
+html[currentmode="standard"] {
+    --main-bg: var(--standard);
+}
+html[currentmode="hipster"] {
+    --main-bg: var(--hipster);
+}
+html[currentmode="cursed"] {
+    --main-bg: var(--cursed);
+}
+html[currentmode="business"] {
+    --main-bg: var(--business);
+}
+html[currentmode="insta"] {
+    --main-bg: var(--insta);
+}
+html[currentmode="techbro"] {
+    --main-bg: var(--techbro);
 }
 
 body {
@@ -41,10 +72,11 @@ section {
     font-weight: 400;
     font-style: normal;
     gap: var(--gap);
-    background-color: #fff;
+    background-color: #ffffffe6;
     padding: 40px;
     width: clamp(360px, 90vw, 800px);
     border-radius: 10px;
+    margin-block-end: 2rem;
 }
 
 #container {
@@ -95,7 +127,7 @@ output {
     margin-top: -1rem;
     padding: 2rem;
     padding-inline: 2.5rem;
-    background: #efefef;
+    background: #fff;
     border-radius: 0 0 10px 10px;
     em {
         display:none;
@@ -112,6 +144,7 @@ output {
     justify-content: flex-start;
     align-items: center;
     font-size: .8rem;
+    border: none;
     input {
         margin: 0;
         margin-right: 0.5rem;
@@ -190,7 +223,7 @@ label:has(input:checked) {
 
 dfn[currentmode="standard"] {
     --dfn-c: #666;
-    --dfn-f: #296b8b;
+    --dfn-f: var(--standard);
     background: #fff;
     font-family: "Tilt Neon";
     font-size: 1.75em;
@@ -198,7 +231,7 @@ dfn[currentmode="standard"] {
 
 dfn[currentmode="hipster"] {
     --dfn-c: #8aa9b3;
-    --dfn-f: #bb4377;
+    --dfn-f: var(--hipster);
     background: #f4f4f4;
     font-family: "Glass Antiqua";
     font-size: 2.1em;
@@ -206,13 +239,15 @@ dfn[currentmode="hipster"] {
 
 dfn[currentmode="cursed"] {
     --dfn-c: #c0392b;
-    --dfn-f: #6ab410;
+    --dfn-f: var(--cursed);
     background: #efefef;
     font-family: "Flavors";
     font-size: 1.7em;
 }
 
 dfn[currentmode="business"] {
+    --dfn-c: #444;
+    --dfn-f: var(--business);
     font-family: "SUSE";
     font-size: 1.7em;
 }
@@ -220,11 +255,11 @@ dfn[currentmode="business"] {
 dfn[currentmode="insta"] {
     font-family: "Dancing Script";
     --dfn-c: #9E9E9E;
-    --dfn-f: hotpink;
+    --dfn-f: var(--insta);
 }
 dfn[currentmode="techbro"] {
     --dfn-c: #00ff9f;
-    --dfn-f: #00bcd4;
+    --dfn-f: var(--techbro);
     background: #0b0f14;
     font-family: "Orbitron";
     font-size: 1.75em;
@@ -259,8 +294,7 @@ dfn[currentmode="techbro"] {
 }
 
 .toast.hipster {
-    background: #8e44ad;
-    /* Grape kombucha purple */
+    background: #8aa9b3;
 }
 
 .toast.cursed {
@@ -273,5 +307,5 @@ dfn[currentmode="techbro"] {
 }
 
 .toast.insta {
-    background: hotpink;
+    background: #666;
 }

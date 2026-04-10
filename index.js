@@ -228,14 +228,6 @@ function getAlphabet() {
     return phoneticModes[currentMode];
 }
 
-async function modeChange(mode) {
-    currentMode = mode;
-    await renderPhoneticAlphabet(document.getElementById("container"));
-    document.getElementById("output").innerHTML = toPhonetic(
-        document.getElementById("input").value
-    );
-}
-
 function toPhonetic(word) {
     return word
         .toUpperCase()
@@ -267,6 +259,7 @@ async function renderPhoneticAlphabet(container) {
         }
         //dfn.classList.add("flip-animation");
         dfn.setAttribute("currentMode", currentMode);
+        document.documentElement.setAttribute("currentMode", currentMode);
         refreshClass(dfn, "flip-animation");
         dfn.textContent = word;
 
@@ -287,7 +280,7 @@ function showToast(mode) {
     if (!toast) return;
     clearTimeout(this.timeoutID);
     const messages = {
-        standard: "Standard mode engaged.",
+        standard: "Standard mode.",
         hipster: "☕ Hipster Mode. Please compost your alphabet.",
         cursed: "👹 Cursed Mode engaged. Good luck.",
         business: "💼 Business Mode. Leveraging phonetic synergies.",
@@ -372,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentMode = document.querySelector('input[name="mode"]:checked')
                     .value;
                 showToast(currentMode);
+                output.innerHTML = "...";
                 await renderPhoneticAlphabet(container);
                 output.innerHTML = toPhonetic(input.value);
             }
