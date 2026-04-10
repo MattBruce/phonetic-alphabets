@@ -263,7 +263,7 @@ async function renderPhoneticAlphabet(container) {
         refreshClass(dfn, "flip-animation");
         dfn.textContent = word;
 
-        await sleep(40); // Adjust delay (ms) as needed
+        await sleep(10); // Adjust delay (ms) as needed
     }
 }
 
