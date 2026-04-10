@@ -443,9 +443,13 @@ document.addEventListener("DOMContentLoaded", () => {
     (async () => {
         const container = document.getElementById("container");
         const modeSelector = document.getElementById("modeSelector");
-        const input = document.querySelector("input[type='text']");
-        const output = document.querySelector("output");
+        const input = document.getElementById("input");
+        const output = document.getElementById("output");
         const speakButton = document.getElementById("speak");
+        
+        // Focus input on load
+        input.focus();
+
         // set mode from URL param if present
         setModeFromURL();
         // init
@@ -454,6 +458,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // On speak click
         speakButton.addEventListener("click", () => {
             speakPhonetic(input.value, currentMode);
+        });
+
+        // Trigger speech on Enter key
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                speakPhonetic(input.value, currentMode);
+            }
         });
 
         // On <input> change
