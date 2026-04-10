@@ -245,38 +245,78 @@ const voiceMap = {
     insta: (v) => v.name.toLowerCase().includes("female") || v.lang.startsWith("en"),
     techbro: (v) => v.name.toLowerCase().includes("google") || v.lang.includes("en-US")
 };
+function protectBracketPhrases(text) {
+    const protectedMap = [];
+    
+    const cleaned = text.replace(/\(([^)]+)\)/g, (match, inside) => {
+        const token = `__BRACKET_${protectedMap.length}__`;
 
+        // convert internal spaces → dash
+        const spoken = inside.trim().replace(/\s+/g, "-");
+
+        protectedMap.push(spoken);
+        return token;
+    });
+
+    return { cleaned, protectedMap };
+}
+function buildSpokenText(text, includePunct) {
+    const { cleaned, protectedMap } = protectBracketPhrases(text);
+
+    const phonetic = getPlainPhonetic(cleaned, includePunct);
+
+    let i = 0;
+    const restored = phonetic.replace(/__BRACKET_\d+__/g, () => {
+        return protectedMap[i++];
+    });
+
+    return restored;
+}
 function toPhonetic(word) {
     return word
         .toUpperCase()
         .split("")
         .map((char) => {
             const translation = getAlphabet()[char] || char;
-            // Wrap in <em> if it's not a standard A-Z letter
-            return /^[A-Z]$/.test(char) ? translation : `<em>${translation}</em>`;
+            // Wrap in <em> if it's not a standard A-Z letter or number
+            return /^[A-Z0-9]$/.test(char) ? translation : `<em>${translation}</em>`;
         })
         .join(" ");
 }
 
-function getPlainPhonetic(word) {
+function getPlainPhonetic(word, includePunct = true) {
     return word
         .toUpperCase()
         .split("")
         .map((char) => {
+            const isLetter = /^[A-Z0-9]$/.test(char);
+
+            if (!includePunct && !isLetter) {
+                return null; // skip punctuation entirely
+            }
+
             return getAlphabet()[char] || char;
         })
+        .filter(Boolean)
         .join(" ");
 }
-
+function formatForSpeech(text) {
+    const tokens = text.match(/\(.*?\)|[^\s]+/g) || [];
+    return tokens.join(", ");
+}
 function speakPhonetic(text, mode = "standard") {
     if (!("speechSynthesis" in window)) return;
 
     speechSynthesis.cancel();
-    const plain = getPlainPhonetic(text);
-    const paused = plain.split(" ").join(", ");
+
+    const includePunct = document.getElementById("punct")?.checked;
+
+    //const plain = getPlainPhonetic(text, includePunct);
+    const plain = buildSpokenText(text, includePunct);
+    const paused = formatForSpeech(plain);
+
     const utterance = new SpeechSynthesisUtterance(paused);
 
-    // Slight mode personality (optional but fun)
     const settings = {
         standard: { rate: 1, pitch: 1 },
         cursed: { rate: 0.85, pitch: 0.7 },
@@ -287,33 +327,28 @@ function speakPhonetic(text, mode = "standard") {
     };
 
     const cfg = settings[mode] || settings.standard;
-
     utterance.rate = cfg.rate;
     utterance.pitch = cfg.pitch;
 
-    // pick voice
     const voices = speechSynthesis.getVoices();
 
-    const pickVoice = (mode) => {
-        if (!voices.length) return null;
-
-        const nameRules = {
-            cursed: ["daniel", "male", "google uk english male"],
-            hipster: ["samantha", "fiona", "uk english"],
-            business: ["daniel", "uk english", "google uk english male"],
-            insta: ["female", "samantha", "uk english female"],
-            techbro: ["google", "us english", "alex"]
-        };
-
-        const rules = nameRules[mode];
-        if (!rules) return null;
-
-        return voices.find(v =>
-            rules.some(r => v.name.toLowerCase().includes(r))
-        ) || null;
+    const nameRules = {
+        cursed: ["daniel", "male", "google uk english male"],
+        hipster: ["samantha", "fiona", "uk english"],
+        business: ["daniel", "uk english", "google uk english male"],
+        insta: ["female", "samantha", "uk english female"],
+        techbro: ["google", "us english", "alex"]
     };
 
-    const voice = pickVoice(mode);
+    const rules = nameRules[mode];
+
+    const voice =
+        rules
+            ? voices.find(v =>
+                rules.some(r => v.name.toLowerCase().includes(r))
+            )
+            : null;
+
     if (voice) utterance.voice = voice;
 
     speechSynthesis.speak(utterance);

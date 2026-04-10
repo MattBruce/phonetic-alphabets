@@ -168,7 +168,7 @@ output:empty ~ #speak {
     display:none;
 }
 
-#punct {
+#punctrow {
     margin-top: -1.5rem;
     padding: 0;
     display: flex;
@@ -181,7 +181,7 @@ output:empty ~ #speak {
         margin-right: 0.5rem;
     }
 }
-#punct:has(input:checked) ~ #outputrow output em {
+#punctrow:has(input:checked) ~ #outputrow output em {
     display:inline;
 }
 /* */
