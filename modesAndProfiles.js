@@ -221,3 +221,51 @@ export const phoneticModes = {
         "@": "(at)"
     }
 };
+
+export const prosodyProfiles = {
+    standard: {
+        word: { rate: 1, pitch: 1, pre: 0, post: 120 },
+        bracket: { rate: 0.95, pitch: 1.1, pre: 200, post: 150 },
+        raw: { rate: 1, pitch: 1, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    },
+
+    cursed: {
+        word: { rate: 0.85, pitch: 0.7, pre: 0, post: 140 },
+        bracket: { rate: 0.8, pitch: 0.9, pre: 400, post: 200 },
+        raw: { rate: 0.9, pitch: 0.8, pre: 0, post: 80 },
+        bracketStrategy: "chunked"
+    },
+
+    hipster: {
+        word: { rate: 0.95, pitch: 1.1, pre: 0, post: 120 },
+        bracket: { rate: 1.0, pitch: 1.25, pre: 150, post: 120 },
+        raw: { rate: 1, pitch: 1, pre: 0, post: 80 },
+        bracketStrategy: "flat"
+    },
+
+    business: {
+        word: { rate: 1.05, pitch: 0.95, pre: 0, post: 100 },
+        bracket: { rate: 1.0, pitch: 1.0, pre: 120, post: 100 },
+        raw: { rate: 1.05, pitch: 0.95, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    },
+
+    insta: {
+        word: { rate: 1.2, pitch: 1.25, pre: 0, post: 100 },
+
+        // key part: uncertainty baseline
+        bracket: { rate: 1.05, pitch: 1.2, pre: 80, post: 160 },
+
+        raw: { rate: 1.15, pitch: 1.1, pre: 0, post: 60 },
+
+        bracketStrategy: "rising"
+    },
+
+    techbro: {
+        word: { rate: 1.1, pitch: 0.9, pre: 0, post: 80 },
+        bracket: { rate: 1.05, pitch: 1.0, pre: 100, post: 120 },
+        raw: { rate: 1.1, pitch: 0.95, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    }
+};
