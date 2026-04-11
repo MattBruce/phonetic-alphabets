@@ -11,11 +11,23 @@ A playful, interactive web application that converts text into various themed ph
   - **Insta 💖**: Social media and influencer terminology (Authentic-self, Boho, Curated...).
   - **Techbro 🚀**: Startup and VC terminology (AI-first, Blockchain, Disrupt...).
   - **Cursed 👹**: Words with silent or confusing leading letters (Aisle, Bdellium, Pterodactyl...).
+- **Integrated Voice Synthesis**: Hear your phonetic conversions spoken aloud with custom voices and prosody for each mode.
 - **Real-time Conversion**: See your text transformed into the selected phonetic alphabet as you type.
 - **Interactive UI**: Click on any phonetic word in the grid to add its letter to your input.
 - **Dynamic Animations**: Smooth transitions and "bounce" effects when typing or switching modes.
 - **Deep Linking**: Share specific configurations using URL parameters.
 - **Responsive Design**: Optimized for various screen sizes using modern CSS techniques (now with improved mobile layout).
+
+## 🔊 Voice & Prosody
+
+Each mode features unique speech patterns and voice selection to match its theme:
+
+- **Standard**: Clear, neutral delivery with standard NATO timing.
+- **Hipster ☕**: Laid-back, slightly higher-pitched voice with relaxed pacing.
+- **Business 💼**: Professional, assertive tone with efficient, "synergistic" timing.
+- **Insta 💖**: High-energy, "up-talk" delivery with rising intonation and sparkle-inspired pauses.
+- **Techbro 🚀**: Fast-paced, disruptive delivery with a focus on "high-growth" verbal speed.
+- **Cursed 👹**: Slow, unsettling delivery with deep pitch and glitched, unpredictable pauses.
 
 ## 🚀 Getting Started
 
@@ -35,11 +47,13 @@ You can pre-configure the application using the following URL parameters:
 - **HTML5**: Semantic structure.
 - **CSS3**: Advanced layouts (Grid, Flexbox), custom properties, and animations.
 - **JavaScript (ES6+)**: Vanilla JS for logic, DOM manipulation, and state management.
+- **Web Speech API**: Integrated `SpeechSynthesis` for custom-tailored vocal delivery.
 - **Google Fonts**: Custom typography for each mode (`SUSE`, `Tilt Neon`, `Glass Antiqua`, `Flavors`, `Dancing Script`, `Orbitron`).
 
 ## 📁 Project Structure
 
 - `index.html`: The main entry point and structure.
 - `index.css`: Styles, animations, and mode-specific themes.
-- `index.js`: Phonetic data, conversion logic, and UI interactions.
+- `index.js`: Main application logic and speech synthesis management.
+- `modesAndProfiles.js`: Phonetic dictionary data and custom prosody profiles.
 - `README.md`: Project documentation.
