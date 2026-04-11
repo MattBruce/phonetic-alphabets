@@ -386,6 +386,7 @@ document.addEventListener("DOMContentLoaded", () => {
     (async () => {
         const container = document.getElementById("container");
         const modeSelector = document.getElementById("modeSelector");
+        const punctCheckbox = document.getElementById("punct");
         const input = document.getElementById("input");
         const output = document.getElementById("output");
         const speakButton = document.getElementById("speak");
@@ -416,6 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // On <input> change
         input.addEventListener("input", () => {
+            speechSynthesis.cancel();
             const val = input.value;
             output.innerHTML = toPhonetic(val);
 
@@ -441,6 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // on mode change
         modeSelector.addEventListener("change", async (e) => {
             if (e.target.matches('input[name="mode"]')) {
+                speechSynthesis.cancel();
                 currentMode = document.querySelector('input[name="mode"]:checked')
                     .value;
                 showToast(currentMode);
@@ -448,6 +451,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 await renderPhoneticAlphabet(container);
                 output.innerHTML = toPhonetic(input.value);
             }
+        });
+        // on punct change
+        punctCheckbox.addEventListener("change", () => {
+            speechSynthesis.cancel();
         });
     })();
 });

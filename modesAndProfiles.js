@@ -26,15 +26,7 @@ export const phoneticModes = {
         X: "X-ray",
         Y: "Yankee",
         Z: "Zulu",
-        " ": "(space)",
-        "'": "(apostrophe)",
-        ".": "(stop)",
-        ",": "(comma)",
-        "-": "(dash)",
-        "!": "(exclamation)",
-        "?": "(question)",
-        "_": "(underscore)",
-        "@": "(at)"
+        " ": "(space)"
     },
     cursed: {
         A: "Aisle",
@@ -173,7 +165,7 @@ export const phoneticModes = {
         X: "XOXO-bestie",
         Y: "Yoga",
         Z: "Zodiac",
-        " ": "(space)",
+        " ": "(gap)",
         "'": "(sparkle)",
         ".": "(full stop vibes)",
         ",": "(pause)",
