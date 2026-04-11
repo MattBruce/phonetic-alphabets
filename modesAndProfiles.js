@@ -231,7 +231,7 @@ export const prosodyProfiles = {
 
     hipster: {
         word: { rate: 0.95, pitch: 1.1, pre: 0, post: 120 },
-        bracket: { rate: 1.0, pitch: 1.25, pre: 150, post: 120 },
+        bracket: { rate: 1.0, pitch: 1.25, pre: 180, post: 120 },
         raw: { rate: 1, pitch: 1, pre: 0, post: 80 },
         bracketStrategy: "flat"
     },
@@ -245,12 +245,9 @@ export const prosodyProfiles = {
 
     insta: {
         word: { rate: 1.2, pitch: 1.25, pre: 0, post: 100 },
-
         // key part: uncertainty baseline
         bracket: { rate: 1.05, pitch: 1.2, pre: 80, post: 160 },
-
         raw: { rate: 1.15, pitch: 1.1, pre: 0, post: 60 },
-
         bracketStrategy: "rising"
     },
 
