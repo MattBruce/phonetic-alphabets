@@ -7,26 +7,214 @@ function getAlphabet() {
     return phoneticModes[currentMode];
 }
 
-let voices = [];
+function toTokens(input, includePunct = true) {
+    return input
+        .split("")
+        .map((char) => {
+            const upper = char.toUpperCase();
+            const translation = getAlphabet()[upper];
 
+            const isLetter = /^[A-Z]$/.test(upper);
+            const isNumber = /^[0-9]$/.test(char);
+            const isAlphaNum = isLetter || isNumber;
+
+            if (!includePunct && !isAlphaNum) return null;
+
+            // ✅ Numbers → treated like words
+            if (isNumber) {
+                return {
+                    type: "word",
+                    text: char,
+                    raw: char
+                };
+            }
+
+            if (translation) {
+                const isBracket = /^\(.*\)$/.test(translation);
+
+                return {
+                    type: isBracket ? "bracket" : "word",
+                    text: isBracket
+                        ? translation.slice(1, -1).replace(/\s+/g, "-") // spoken
+                        : translation,
+                    display: isBracket
+                        ? `(${translation.slice(1, -1).replace(/\s+/g, "-")})`
+                        : translation,
+                    raw: char
+                };
+            }
+
+            return {
+                type: "raw",
+                text: char,
+                raw: char
+            };
+
+        })
+        .filter(Boolean);
+}
+
+
+const prosodyProfiles = {
+    standard: {
+        word: { rate: 1, pitch: 1, pre: 0, post: 120 },
+        bracket: { rate: 0.95, pitch: 1.1, pre: 200, post: 150 },
+        raw: { rate: 1, pitch: 1, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    },
+
+    cursed: {
+        word: { rate: 0.85, pitch: 0.7, pre: 0, post: 140 },
+        bracket: { rate: 0.8, pitch: 0.9, pre: 400, post: 200 },
+        raw: { rate: 0.9, pitch: 0.8, pre: 0, post: 80 },
+        bracketStrategy: "chunked"
+    },
+
+    hipster: {
+        word: { rate: 0.95, pitch: 1.1, pre: 0, post: 120 },
+        bracket: { rate: 1.0, pitch: 1.25, pre: 150, post: 120 },
+        raw: { rate: 1, pitch: 1, pre: 0, post: 80 },
+        bracketStrategy: "flat"
+    },
+
+    business: {
+        word: { rate: 1.05, pitch: 0.95, pre: 0, post: 100 },
+        bracket: { rate: 1.0, pitch: 1.0, pre: 120, post: 100 },
+        raw: { rate: 1.05, pitch: 0.95, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    },
+
+    insta: {
+        word: { rate: 1.2, pitch: 1.25, pre: 0, post: 100 },
+
+        // key part: uncertainty baseline
+        bracket: { rate: 1.05, pitch: 1.2, pre: 80, post: 160 },
+
+        raw: { rate: 1.15, pitch: 1.1, pre: 0, post: 60 },
+
+        bracketStrategy: "rising"
+    },
+
+    techbro: {
+        word: { rate: 1.1, pitch: 0.9, pre: 0, post: 80 },
+        bracket: { rate: 1.05, pitch: 1.0, pre: 100, post: 120 },
+        raw: { rate: 1.1, pitch: 0.95, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    }
+};
+
+let voices = [];
 function loadVoices() {
     voices = speechSynthesis.getVoices();
 }
-
 loadVoices();
 speechSynthesis.onvoiceschanged = loadVoices;
 
-const voiceMap = {
-    standard: null, // default system voice
-    cursed: (v) => v.name.toLowerCase().includes("daniel") || v.name.toLowerCase().includes("male"),
-    hipster: (v) => v.name.toLowerCase().includes("samantha") || v.lang.includes("en-GB"),
-    business: (v) => v.lang === "en-GB",
-    insta: (v) => v.name.toLowerCase().includes("female") || v.lang.startsWith("en"),
-    techbro: (v) => v.name.toLowerCase().includes("google") || v.lang.includes("en-US")
+function pickBestVoice(mode, voices = []) {
+    if (!Array.isArray(voices) || voices.length === 0) return null;
+
+    // 1. Try explicit preferences first
+    const prefs = preferredVoices[mode];
+    if (prefs) {
+        for (const pref of prefs) {
+            const found = voices.find(v =>
+                v.name.toLowerCase().includes(pref.toLowerCase())
+            );
+            if (found) return found;
+        }
+    }
+
+    // 2. Fallback to scoring
+    const scorer = voiceProfiles[mode];
+    if (!scorer) return null;
+
+    let best = null;
+    let bestScore = -Infinity;
+
+    for (const v of voices) {
+        const score = scorer(v);
+        if (score > bestScore) {
+            bestScore = score;
+            best = v;
+        }
+    }
+
+    return best;
+}
+const voiceProfiles = {
+    standard: () => 0,
+
+    cursed: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang === "en-GB") score += 3;
+        if (n.includes("daniel")) score += 5;
+        if (n.includes("google uk english male")) score += 4;
+        if (n.includes("male")) score += 1;
+        if (v.localService) score += 1;
+
+        return score;
+    },
+
+    hipster: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang === "en-GB") score += 3;
+        if (["fiona", "karen"].some(x => n.includes(x))) score += 5;
+        if (n.includes("google uk english female")) score += 4;
+        if (n.includes("female")) score += 1;
+
+        return score;
+    },
+
+    business: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang === "en-GB") score += 4;
+        if (n.includes("daniel")) score += 5;
+        if (n.includes("google uk english male")) score += 4;
+        if (n.includes("male")) score += 2;
+
+        return score;
+    },
+
+    insta: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang.startsWith("en-US")) score += 4;
+        if (["samantha", "victoria"].some(x => n.includes(x))) score += 5;
+        if (n.includes("google us english")) score += 3;
+        if (n.includes("female")) score += 2;
+
+        return score;
+    },
+
+    techbro: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang.startsWith("en-US")) score += 4;
+        if (["alex", "fred"].some(x => n.includes(x))) score += 5;
+        if (n.includes("google us english male")) score += 4;
+        if (n.includes("male")) score += 2;
+
+        return score;
+    }
+};
+const preferredVoices = {
+    cursed: ["Daniel", "Google UK English Male"],
+    hipster: ["Karen", "Fiona", "Google UK English Female"],
+    business: ["Daniel", "Google UK English Male"],
+    insta: ["Samantha", "Victoria", "Google US English"],
+    techbro: ["Alex", "Fred", "Google US English Male"]
 };
 function protectBracketPhrases(text) {
     const protectedMap = [];
-    
+
     const cleaned = text.replace(/\(([^)]+)\)/g, (match, inside) => {
         const token = `__BRACKET_${protectedMap.length}__`;
 
@@ -39,62 +227,71 @@ function protectBracketPhrases(text) {
 
     return { cleaned, protectedMap };
 }
-function buildSpokenText(text, includePunct) {
-    const { cleaned, protectedMap } = protectBracketPhrases(text);
 
-    const phonetic = getPlainPhonetic(cleaned, includePunct);
+function renderTokens(tokens) {
+    return tokens
+        .map((t) => {
+            if (t.type === "word") return t.text;
 
-    let i = 0;
-    const restored = phonetic.replace(/__BRACKET_\d+__/g, () => {
-        return protectedMap[i++];
-    });
-
-    return restored;
-}
-function toPhonetic(word) {
-    return word
-        .toUpperCase()
-        .split("")
-        .map((char) => {
-            const translation = getAlphabet()[char] || char;
-            // Wrap in <em> if it's not a standard A-Z letter or number
-            return /^[A-Z0-9]$/.test(char) ? translation : `<em>${translation}</em>`;
-        })
-        .join(" ");
-}
-
-function getPlainPhonetic(word, includePunct = true) {
-    return word
-        .toUpperCase()
-        .split("")
-        .map((char) => {
-            const isLetter = /^[A-Z0-9]$/.test(char);
-
-            if (!includePunct && !isLetter) {
-                return null; // skip punctuation entirely
+            if (t.type === "bracket") {
+                return `<em>${t.display}</em>`;
             }
 
-            return getAlphabet()[char] || char;
+            return `<em>${t.text}</em>`;
         })
-        .filter(Boolean)
         .join(" ");
 }
-function formatForSpeech(text) {
-    const tokens = text.match(/\(.*?\)|[^\s]+/g) || [];
-    return tokens.join(", ");
+
+function toPhonetic(input) {
+    const tokens = toTokens(input, true); // always show punctuation visually
+    return renderTokens(tokens);
 }
-function speakPhonetic(text, mode = "standard") {
+
+
+async function speakBracket(token, profile, speakOne, wait, base) {
+    const parts = token.text.split("-");
+    const strategy = profile.bracketStrategy || "flat";
+
+    if (strategy === "rising") {
+        const phrase = parts
+            .map((p, i) => {
+                const marker = i < parts.length - 1 ? " ↑" : "";
+                return p + marker;
+            })
+            .join(" ");
+
+        await speakOne(phrase, {
+            rate: base.rate * 1.03,
+            pitch: base.pitch + 0.35
+        });
+
+        await wait(profile.bracket.post || 120);
+        return;
+    }
+
+    if (strategy === "chunked") {
+        for (const p of parts) {
+            await speakOne(p, {
+                rate: base.rate * 0.9,
+                pitch: base.pitch
+            });
+            await wait(120);
+        }
+        await wait(profile.bracket.post || 120);
+        return;
+    }
+
+    // default flat
+    await speakOne(token.text, profile.bracket);
+}
+
+async function speakPhonetic(text, mode = "standard") {
     if (!("speechSynthesis" in window)) return;
 
     speechSynthesis.cancel();
 
     const includePunct = document.getElementById("punct")?.checked;
-
-    //const plain = getPlainPhonetic(text, includePunct);
-    const plain = buildSpokenText(text, includePunct);
-    const paused = formatForSpeech(plain);
-
-    const utterance = new SpeechSynthesisUtterance(paused);
+    const tokens = toTokens(text, includePunct);
 
     const settings = {
         standard: { rate: 1, pitch: 1 },
@@ -105,34 +302,47 @@ function speakPhonetic(text, mode = "standard") {
         techbro: { rate: 1.1, pitch: 0.9 }
     };
 
-    const cfg = settings[mode] || settings.standard;
-    utterance.rate = cfg.rate;
-    utterance.pitch = cfg.pitch;
+    const base = settings[mode] || settings.standard;
+    const voice = pickBestVoice(mode, speechSynthesis.getVoices());
 
-    const voices = speechSynthesis.getVoices();
+    const speakOne = (text, opts = {}) =>
+        new Promise(resolve => {
+            const u = new SpeechSynthesisUtterance(text);
 
-    const nameRules = {
-        cursed: ["daniel", "male", "google uk english male"],
-        hipster: ["samantha", "fiona", "uk english"],
-        business: ["daniel", "uk english", "google uk english male"],
-        insta: ["female", "samantha", "uk english female"],
-        techbro: ["google", "us english", "alex"]
-    };
+            u.rate = opts.rate ?? base.rate;
+            u.pitch = opts.pitch ?? base.pitch;
 
-    const rules = nameRules[mode];
+            if (voice) u.voice = voice;
 
-    const voice =
-        rules
-            ? voices.find(v =>
-                rules.some(r => v.name.toLowerCase().includes(r))
-            )
-            : null;
+            u.onend = resolve;
+            speechSynthesis.speak(u);
+        });
 
-    if (voice) utterance.voice = voice;
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
-    speechSynthesis.speak(utterance);
+    for (const token of tokens) {
+        const profile = prosodyProfiles[mode] || prosodyProfiles.standard;
+
+        const cfg = profile[token.type] || profile.word;
+
+        if (cfg.pre) await wait(cfg.pre);
+
+        if (token.type === "bracket") {
+            await speakBracket(token, profile, speakOne, wait, base);
+        } else {
+            await speakOne(token.text, {
+                rate: (mode === "cursed" || mode === "insta")
+                    ? base.rate + (Math.random() * 0.1 - 0.05)
+                    : cfg.rate,
+                pitch: cfg.pitch
+            });
+        }
+
+        if (cfg.post) await wait(cfg.post);
+    }
+
+
 }
-
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -225,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const input = document.getElementById("input");
         const output = document.getElementById("output");
         const speakButton = document.getElementById("speak");
-        
+
         // Focus input on load
         input.focus();
 
