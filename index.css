@@ -82,8 +82,8 @@ section {
     padding: var(--sectionpad);
     width: clamp(45ch, 90vw, 800px);
     border-radius: var(--cornerrad);
-    margin-block-end: 2rem;
     position:relative;
+    margin-block-end: var(--sectionpad);
 }
 
 #container {
@@ -148,7 +148,7 @@ input {
     margin: -2.5rem;
     padding: 2rem;
     margin: calc(0px - var(--sectionpad));
-    margin-top: -1rem;
+    margin-top: 0rem;
     padding: 3rem;
     padding: var(--sectionpad);
     background: #fff;
@@ -192,7 +192,7 @@ output:empty:before, output:empty:after {
 }
 
 #punctrow {
-    margin-top: -1.5em;
+    margin-block: -1em;
     padding: 0;
     display: flex;
     justify-content: flex-start;
