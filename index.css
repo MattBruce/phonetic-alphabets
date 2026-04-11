@@ -69,6 +69,8 @@ section {
     --gap: clamp(0.6rem, calc(.1rem + 4vw), 2rem);
     --sectionpad: 3rem;
     --sectionpad: calc(var(--gap) * 1.5);
+    --cornerrad: 10px;
+    --cornerrad: calc(var(--gap) / 3);
     display: grid;
     font-family: "SUSE", sans-serif;
     font-optical-sizing: auto;
@@ -79,7 +81,7 @@ section {
     padding: 3rem;
     padding: var(--sectionpad);
     width: clamp(45ch, 90vw, 800px);
-    border-radius: 10px;
+    border-radius: var(--cornerrad);
     margin-block-end: 2rem;
     position:relative;
 }
@@ -182,7 +184,8 @@ output:after {
     transition: filter 0.2s;
 }
 output:empty ~ #speak {
-    display:none;
+    opacity:0.2;
+    pointer-events: none;
 }
 output:empty:before, output:empty:after {
     display:none;
