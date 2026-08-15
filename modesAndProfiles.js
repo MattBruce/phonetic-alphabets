@@ -248,6 +248,43 @@ export const phoneticModes = {
         "?": "(passive aggression)",
         "_": "(under the radar)",
         "@": "(cc'ing your manager)"
+    },
+    brainrot: {
+        A: "Aura",
+        B: "Brat",
+        C: "Cooked",
+        D: "Delulu",
+        E: "Edge",
+        F: "Fanum-tax",
+        G: "Gyatt",
+        H: "High-key",
+        I: "Ick",
+        J: "Jumpscare",
+        K: "Karen",
+        L: "Looksmaxxing",
+        M: "Mewing",
+        N: "No-cap",
+        O: "Ohio",
+        P: "Periodt",
+        Q: "Queen",
+        R: "Rizz",
+        S: "Skibidi",
+        T: "Touch-grass",
+        U: "Uncanny",
+        V: "Valid",
+        W: "W-rizz",
+        X: "X-factor",
+        Y: "Yap",
+        Z: "Zesty",
+        " ": "(subway surfers)",
+        "'": "(no cap)",
+        ".": "(periodt)",
+        ",": "(pause)",
+        "-": "(minus aura)",
+        "!": "(what the sigma)",
+        "?": "(blud thought)",
+        "_": "(NPC behavior)",
+        "@": "(at the rizzler)"
     }
 };
 
@@ -285,6 +322,13 @@ export const prosodyProfiles = {
         bracket: { rate: 0.85, pitch: 0.8, pre: 220, post: 170 },
         raw: { rate: 0.95, pitch: 0.85, pre: 0, post: 70 },
         bracketStrategy: "flat"
+    },
+
+    brainrot: {
+        word: { rate: 1.25, pitch: 1.15, pre: 0, post: 80 },
+        bracket: { rate: 1.2, pitch: 1.3, pre: 60, post: 100 },
+        raw: { rate: 1.2, pitch: 1.1, pre: 0, post: 50 },
+        bracketStrategy: "rising"
     },
 
     insta: {

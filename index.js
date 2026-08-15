@@ -148,6 +148,18 @@ const voiceProfiles = {
         return score;
     },
 
+    brainrot: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang.startsWith("en-US")) score += 4;
+        if (["fred", "samantha", "alex", "victoria"].some(x => n.includes(x))) score += 5;
+        if (n.includes("google us english")) score += 3;
+        if (v.localService) score += 1;
+
+        return score;
+    },
+
     insta: (v) => {
         let score = 0;
         const n = v.name.toLowerCase();
@@ -177,6 +189,7 @@ const preferredVoices = {
     hipster: ["Karen", "Fiona", "Google UK English Female"],
     business: ["Daniel", "Google UK English Male"],
     office: ["Daniel", "Oliver", "Serena", "Google UK English Male", "Google US English Female"],
+    brainrot: ["Fred", "Samantha", "Alex", "Google US English Male", "Google US English"],
     insta: ["Samantha", "Victoria", "Google US English"],
     techbro: ["Alex", "Fred", "Google US English Male"]
 };
@@ -267,6 +280,7 @@ async function speakPhonetic(text, mode = "standard") {
         hipster: { rate: 0.95, pitch: 1.1 },
         business: { rate: 1.05, pitch: 0.95 },
         office: { rate: 0.95, pitch: 0.9 },
+        brainrot: { rate: 1.25, pitch: 1.15 },
         insta: { rate: 1.2, pitch: 1.3 },
         techbro: { rate: 1.1, pitch: 0.9 }
     };
@@ -300,7 +314,7 @@ async function speakPhonetic(text, mode = "standard") {
             await speakBracket(token, profile, speakOne, wait, base);
         } else {
             await speakOne(token.text, {
-                rate: (mode === "cursed" || mode === "insta")
+                rate: (mode === "cursed" || mode === "insta" || mode === "brainrot")
                     ? base.rate + (Math.random() * 0.1 - 0.05)
                     : cfg.rate,
                 pitch: cfg.pitch
@@ -357,6 +371,7 @@ function showToast(mode) {
         cursed: "👹 Cursed Mode engaged. Good luck.",
         business: "💼 Business Mode. Leveraging phonetic synergies.",
         office: "📎 Office Mode. As per my last email, please find attached.",
+        brainrot: "💀 Brainrot Mode. What the sigma? +1000 Aura.",
         insta: "💖 Instagram Mode. Showing up as your most phonetic, authentic self.",
         techbro: "🚀 Techbro Mode. Disrupting phonetics at scale."
     };
@@ -373,6 +388,7 @@ const modeLabels = {
     hipster: "Hipster ☕",
     business: "Business 💼",
     office: "Office 📎",
+    brainrot: "Brainrot 💀",
     insta: "Insta 💖",
     techbro: "Techbro 🚀",
     cursed: "Cursed 👹"
@@ -401,6 +417,7 @@ function initBubbleModeSelector() {
         { id: "hipster", label: "Hipster ☕" },
         { id: "business", label: "Business 💼" },
         { id: "office", label: "Office 📎" },
+        { id: "brainrot", label: "Brainrot 💀" },
         { id: "insta", label: "Insta 💖" },
         { id: "techbro", label: "Techbro 🚀" },
         { id: "cursed", label: "Cursed 👹" }
@@ -591,7 +608,7 @@ function setModeFromURL() {
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get("mode");
     const txtParam = params.get("text");
-    const validModes = ["standard", "hipster", "cursed", "business", "office", "insta", "techbro"];
+    const validModes = ["standard", "hipster", "cursed", "business", "office", "brainrot", "insta", "techbro"];
 
     if (modeParam && validModes.includes(modeParam)) {
         // Set the radio button

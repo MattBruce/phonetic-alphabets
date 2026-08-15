@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Dancing+Script:wght@400..700&family=Flavors&family=Glass+Antiqua&family=Orbitron&family=SUSE:wght@100..800&family=Tilt+Neon&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Dancing+Script:wght@400..700&family=Flavors&family=Glass+Antiqua&family=Orbitron&family=Rubik+Glitch&family=SUSE:wght@100..800&family=Tilt+Neon&display=swap");
 
 :root {
   --main-bg: #222;
@@ -8,6 +8,7 @@
   --cursed: #6ab410;
   --business: #0077cc;
   --office: #546e7a;
+  --brainrot: #8b5cf6;
   --techbro: #00bcd4;
 }
 
@@ -42,6 +43,9 @@ html[currentmode="business"] {
 }
 html[currentmode="office"] {
     --main-bg: var(--office);
+}
+html[currentmode="brainrot"] {
+    --main-bg: var(--brainrot);
 }
 html[currentmode="insta"] {
     --main-bg: var(--insta);
@@ -386,7 +390,6 @@ dfn.flip-animation {
     background: var(--bubble-color, rgba(255, 255, 255, 0.25));
     border-color: rgba(255, 255, 255, 0.85);
     color: #fff;
-    transform: translateX(4px);
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
@@ -406,6 +409,7 @@ dfn.flip-animation {
 .mode-bubble[data-mode="hipster"] { --bubble-color: var(--hipster); font-family: "Glass Antiqua", cursive; }
 .mode-bubble[data-mode="business"] { --bubble-color: var(--business); font-family: "SUSE", sans-serif; }
 .mode-bubble[data-mode="office"] { --bubble-color: var(--office); font-family: "Courier Prime", monospace; }
+.mode-bubble[data-mode="brainrot"] { --bubble-color: var(--brainrot); font-family: "Rubik Glitch", cursive; }
 .mode-bubble[data-mode="insta"] { --bubble-color: var(--insta); font-family: "Dancing Script", cursive; }
 .mode-bubble[data-mode="techbro"] { --bubble-color: var(--techbro); font-family: "Orbitron", sans-serif; }
 .mode-bubble[data-mode="cursed"] { --bubble-color: var(--cursed); font-family: "Flavors", cursive; }
@@ -447,6 +451,14 @@ dfn[currentmode="office"] {
     background: #eceff1;
     font-family: "Courier Prime", monospace;
     font-size: 1.5em;
+}
+
+dfn[currentmode="brainrot"] {
+    --dfn-c: #c084fc;
+    --dfn-f: #4ade80;
+    background: #190a2e;
+    font-family: "Rubik Glitch";
+    font-size: 1.6em;
 }
 
 dfn[currentmode="insta"] {
@@ -505,6 +517,10 @@ dfn[currentmode="techbro"] {
 
 .toast.office {
     background: var(--office);
+}
+
+.toast.brainrot {
+    background: var(--brainrot);
 }
 
 .toast.insta {
