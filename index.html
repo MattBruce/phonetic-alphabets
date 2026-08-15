@@ -11,13 +11,23 @@
 </head>
 
 <body class="light_or_dark_here">
-    <div id="modeSelector">
-        <label><input type="radio" name="mode" value="standard" checked />NATO</label>
-        <label><input type="radio" name="mode" value="hipster" />Hipster ☕</label>
-        <label><input type="radio" name="mode" value="business" />Business 💼</label>
-        <label><input type="radio" name="mode" value="insta" />Insta 💖</label>
-        <label><input type="radio" name="mode" value="techbro" />Techbro 🚀</label>
-        <label><input type="radio" name="mode" value="cursed" />Cursed 👹</label>
+    <div id="modeSelector" class="mode-selector-container">
+        <div class="radio-group" style="display:none;">
+            <label><input type="radio" name="mode" value="standard" checked />NATO</label>
+            <label><input type="radio" name="mode" value="hipster" />Hipster ☕</label>
+            <label><input type="radio" name="mode" value="business" />Business 💼</label>
+            <label><input type="radio" name="mode" value="insta" />Insta 💖</label>
+            <label><input type="radio" name="mode" value="techbro" />Techbro 🚀</label>
+            <label><input type="radio" name="mode" value="cursed" />Cursed 👹</label>
+        </div>
+        <button type="button" id="modeSelectorTrigger" class="mode-selector-btn" aria-label="Select mode">
+            <span id="modeSelectorLabel" class="mode-label">NATO 🪖</span>
+            <span class="mode-arrow">▾</span>
+        </button>
+        <div id="modeBubblesOverlay" class="mode-bubbles-overlay">
+            <div class="mode-bubbles-backdrop"></div>
+            <div id="modeBubblesContainer" class="mode-bubbles-container"></div>
+        </div>
     </div>
     <section>
         <div id="container"></div>

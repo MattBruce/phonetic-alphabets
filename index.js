@@ -352,6 +352,223 @@ function showToast(mode) {
     }, 2500);
 }
 
+const modeLabels = {
+    standard: "NATO 🪖",
+    hipster: "Hipster ☕",
+    business: "Business 💼",
+    insta: "Insta 💖",
+    techbro: "Techbro 🚀",
+    cursed: "Cursed 👹"
+};
+
+function updateTriggerUI(mode) {
+    const labelEl = document.getElementById("modeSelectorLabel");
+    const triggerEl = document.getElementById("modeSelectorTrigger");
+    if (labelEl) {
+        labelEl.textContent = modeLabels[mode] || mode;
+    }
+    if (triggerEl) {
+        triggerEl.setAttribute("data-mode", mode);
+    }
+}
+
+function initBubbleModeSelector() {
+    const trigger = document.getElementById("modeSelectorTrigger");
+    const overlay = document.getElementById("modeBubblesOverlay");
+    const container = document.getElementById("modeBubblesContainer");
+    if (!trigger || !overlay || !container) return;
+
+    const backdrop = overlay.querySelector(".mode-bubbles-backdrop");
+    const modesData = [
+        { id: "standard", label: "NATO 🪖" },
+        { id: "hipster", label: "Hipster ☕" },
+        { id: "business", label: "Business 💼" },
+        { id: "insta", label: "Insta 💖" },
+        { id: "techbro", label: "Techbro 🚀" },
+        { id: "cursed", label: "Cursed 👹" }
+    ];
+
+    let isMenuOpen = false;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let bubbleElements = [];
+
+    // Create stacked option elements
+    container.innerHTML = "";
+    bubbleElements = modesData.map(m => {
+        const item = document.createElement("div");
+        item.className = "mode-bubble";
+        item.dataset.mode = m.id;
+        item.textContent = m.label;
+
+        // Mouse hover support for crisp mouse responsiveness
+        item.addEventListener("mouseenter", () => {
+            if (isMenuOpen) {
+                setTargetedElement(item);
+            }
+        });
+
+        container.appendChild(item);
+        return item;
+    });
+
+    function setTargetedElement(targetEl) {
+        bubbleElements.forEach(el => {
+            if (el === targetEl) {
+                el.classList.add("targeted");
+            } else {
+                el.classList.remove("targeted");
+            }
+        });
+    }
+
+    function updateActiveState() {
+        updateTriggerUI(currentMode);
+        bubbleElements.forEach(b => {
+            if (b.dataset.mode === currentMode) {
+                b.classList.add("current-mode");
+            } else {
+                b.classList.remove("current-mode");
+            }
+        });
+    }
+
+    function positionContainer() {
+        const triggerRect = trigger.getBoundingClientRect();
+        const containerWidth = container.offsetWidth || 230;
+        const containerHeight = container.offsetHeight || 290;
+        const margin = 10;
+
+        // Center horizontally below trigger
+        let left = triggerRect.left + triggerRect.width / 2 - containerWidth / 2;
+        left = Math.max(margin, Math.min(window.innerWidth - containerWidth - margin, left));
+
+        // Position vertically: below trigger if space allows, else above
+        const spaceBelow = window.innerHeight - triggerRect.bottom;
+        let top;
+        if (spaceBelow >= containerHeight + 12 || triggerRect.top < containerHeight + 12) {
+            top = triggerRect.bottom + 8;
+        } else {
+            top = triggerRect.top - containerHeight - 8;
+        }
+        top = Math.max(margin, Math.min(window.innerHeight - containerHeight - margin, top));
+
+        container.style.left = `${left}px`;
+        container.style.top = `${top}px`;
+    }
+
+    function openMenu() {
+        isMenuOpen = true;
+        trigger.classList.add("pressed");
+        overlay.classList.add("active");
+        updateActiveState();
+
+        positionContainer();
+
+        const activeItem = bubbleElements.find(b => b.dataset.mode === currentMode);
+        setTargetedElement(activeItem);
+    }
+
+    function closeMenu() {
+        isMenuOpen = false;
+        isDragging = false;
+        trigger.classList.remove("pressed");
+        overlay.classList.remove("active");
+
+        bubbleElements.forEach(b => b.classList.remove("targeted"));
+    }
+
+    function updateTargetedFromPointer(px, py) {
+        if (!isMenuOpen) return;
+        const elem = document.elementFromPoint(px, py);
+        const bubble = elem ? elem.closest(".mode-bubble") : null;
+        if (bubble) {
+            setTargetedElement(bubble);
+        }
+    }
+
+    function selectTargetedMode() {
+        const targeted = bubbleElements.find(b => b.classList.contains("targeted"));
+        if (targeted) {
+            const modeVal = targeted.dataset.mode;
+            const radio = document.querySelector(`input[name="mode"][value="${modeVal}"]`);
+            if (radio) {
+                radio.checked = true;
+                radio.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+        }
+    }
+
+    function handlePressStart(e) {
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX;
+        startY = clientY;
+        isDragging = true;
+
+        if (!isMenuOpen) {
+            openMenu();
+            updateTargetedFromPointer(clientX, clientY);
+        } else {
+            const elem = document.elementFromPoint(clientX, clientY);
+            if (!elem || !elem.closest(".mode-bubbles-container")) {
+                closeMenu();
+            }
+        }
+    }
+
+    function handleMove(e) {
+        if (!isMenuOpen) return;
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        const moveDist = Math.hypot(clientX - startX, clientY - startY);
+        if (moveDist > 8 && e.cancelable && e.type === "touchmove") {
+            e.preventDefault();
+        }
+
+        updateTargetedFromPointer(clientX, clientY);
+    }
+
+    function handlePressEnd(e) {
+        if (!isMenuOpen) return;
+
+        const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+        const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+        const moveDist = Math.hypot(clientX - startX, clientY - startY);
+
+        if (isDragging && moveDist > 10) {
+            selectTargetedMode();
+            closeMenu();
+        } else {
+            const elem = document.elementFromPoint(clientX, clientY);
+            const tappedBubble = elem ? elem.closest(".mode-bubble") : null;
+            if (tappedBubble) {
+                setTargetedElement(tappedBubble);
+                selectTargetedMode();
+                closeMenu();
+            }
+        }
+        isDragging = false;
+    }
+
+    trigger.addEventListener("mousedown", handlePressStart);
+    trigger.addEventListener("touchstart", handlePressStart, { passive: false });
+
+    window.addEventListener("mousemove", handleMove);
+    window.addEventListener("touchmove", handleMove, { passive: false });
+
+    window.addEventListener("mouseup", handlePressEnd);
+    window.addEventListener("touchend", handlePressEnd);
+
+    if (backdrop) {
+        backdrop.addEventListener("click", closeMenu);
+    }
+
+    updateActiveState();
+}
+
 function setModeFromURL() {
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get("mode");
@@ -379,6 +596,7 @@ function setModeFromURL() {
             document.getElementById("input").value
         );
         showToast(currentMode);
+        updateTriggerUI(currentMode);
     }
 }
 
@@ -393,6 +611,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Focus input on load
         input.focus();
+
+        // Init gesture menu
+        initBubbleModeSelector();
 
         // set mode from URL param if present
         setModeFromURL();
@@ -444,8 +665,8 @@ document.addEventListener("DOMContentLoaded", () => {
         modeSelector.addEventListener("change", async (e) => {
             if (e.target.matches('input[name="mode"]')) {
                 speechSynthesis.cancel();
-                currentMode = document.querySelector('input[name="mode"]:checked')
-                    .value;
+                currentMode = document.querySelector('input[name="mode"]:checked').value;
+                updateTriggerUI(currentMode);
                 showToast(currentMode);
                 output.innerHTML = "";
                 await renderPhoneticAlphabet(container);
