@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: Deploy Static Site
     runs-on: ubuntu-latest
+    environment: moob.me.uk
 
     steps:
       - name: Checkout Code
