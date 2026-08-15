@@ -42,7 +42,7 @@ jobs:
           SERVER_TARGET_DIR: ${{ secrets.SERVER_TARGET_DIR }}
         run: |
           rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
+            -e "ssh -p 65002 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" \
             --exclude='.git*' \
             --exclude='.vscode' \
             --exclude='README.md' \
