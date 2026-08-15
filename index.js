@@ -135,6 +135,19 @@ const voiceProfiles = {
         return score;
     },
 
+    office: (v) => {
+        let score = 0;
+        const n = v.name.toLowerCase();
+
+        if (v.lang === "en-GB" || v.lang.startsWith("en-US")) score += 3;
+        if (["daniel", "oliver", "george"].some(x => n.includes(x))) score += 5;
+        if (["serena", "samantha", "victoria"].some(x => n.includes(x))) score += 4;
+        if (n.includes("google uk english") || n.includes("google us english")) score += 3;
+        if (v.localService) score += 1;
+
+        return score;
+    },
+
     insta: (v) => {
         let score = 0;
         const n = v.name.toLowerCase();
@@ -163,6 +176,7 @@ const preferredVoices = {
     cursed: ["Daniel", "Google UK English Male"],
     hipster: ["Karen", "Fiona", "Google UK English Female"],
     business: ["Daniel", "Google UK English Male"],
+    office: ["Daniel", "Oliver", "Serena", "Google UK English Male", "Google US English Female"],
     insta: ["Samantha", "Victoria", "Google US English"],
     techbro: ["Alex", "Fred", "Google US English Male"]
 };
@@ -252,6 +266,7 @@ async function speakPhonetic(text, mode = "standard") {
         cursed: { rate: 0.85, pitch: 0.7 },
         hipster: { rate: 0.95, pitch: 1.1 },
         business: { rate: 1.05, pitch: 0.95 },
+        office: { rate: 0.95, pitch: 0.9 },
         insta: { rate: 1.2, pitch: 1.3 },
         techbro: { rate: 1.1, pitch: 0.9 }
     };
@@ -341,6 +356,7 @@ function showToast(mode) {
         hipster: "☕ Hipster Mode. Please compost your alphabet.",
         cursed: "👹 Cursed Mode engaged. Good luck.",
         business: "💼 Business Mode. Leveraging phonetic synergies.",
+        office: "📎 Office Mode. As per my last email, please find attached.",
         insta: "💖 Instagram Mode. Showing up as your most phonetic, authentic self.",
         techbro: "🚀 Techbro Mode. Disrupting phonetics at scale."
     };
@@ -356,6 +372,7 @@ const modeLabels = {
     standard: "NATO 🪖",
     hipster: "Hipster ☕",
     business: "Business 💼",
+    office: "Office 📎",
     insta: "Insta 💖",
     techbro: "Techbro 🚀",
     cursed: "Cursed 👹"
@@ -383,6 +400,7 @@ function initBubbleModeSelector() {
         { id: "standard", label: "NATO 🪖" },
         { id: "hipster", label: "Hipster ☕" },
         { id: "business", label: "Business 💼" },
+        { id: "office", label: "Office 📎" },
         { id: "insta", label: "Insta 💖" },
         { id: "techbro", label: "Techbro 🚀" },
         { id: "cursed", label: "Cursed 👹" }
@@ -573,7 +591,7 @@ function setModeFromURL() {
     const params = new URLSearchParams(window.location.search);
     const modeParam = params.get("mode");
     const txtParam = params.get("text");
-    const validModes = ["standard", "hipster", "cursed", "business", "insta", "techbro"];
+    const validModes = ["standard", "hipster", "cursed", "business", "office", "insta", "techbro"];
 
     if (modeParam && validModes.includes(modeParam)) {
         // Set the radio button

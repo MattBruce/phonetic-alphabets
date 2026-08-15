@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Flavors&family=Glass+Antiqua&family=SUSE:wght@100..800&family=Tilt+Neon&family=Dancing+Script:wght@400..700&family=Orbitron&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Dancing+Script:wght@400..700&family=Flavors&family=Glass+Antiqua&family=Orbitron&family=SUSE:wght@100..800&family=Tilt+Neon&display=swap");
 
 :root {
   --main-bg: #222;
@@ -7,6 +7,7 @@
   --hipster: #bb4377;
   --cursed: #6ab410;
   --business: #0077cc;
+  --office: #546e7a;
   --techbro: #00bcd4;
 }
 
@@ -38,6 +39,9 @@ html[currentmode="cursed"] {
 }
 html[currentmode="business"] {
     --main-bg: var(--business);
+}
+html[currentmode="office"] {
+    --main-bg: var(--office);
 }
 html[currentmode="insta"] {
     --main-bg: var(--insta);
@@ -401,6 +405,7 @@ dfn.flip-animation {
 .mode-bubble[data-mode="standard"] { --bubble-color: var(--standard); font-family: "Tilt Neon", sans-serif; }
 .mode-bubble[data-mode="hipster"] { --bubble-color: var(--hipster); font-family: "Glass Antiqua", cursive; }
 .mode-bubble[data-mode="business"] { --bubble-color: var(--business); font-family: "SUSE", sans-serif; }
+.mode-bubble[data-mode="office"] { --bubble-color: var(--office); font-family: "Courier Prime", monospace; }
 .mode-bubble[data-mode="insta"] { --bubble-color: var(--insta); font-family: "Dancing Script", cursive; }
 .mode-bubble[data-mode="techbro"] { --bubble-color: var(--techbro); font-family: "Orbitron", sans-serif; }
 .mode-bubble[data-mode="cursed"] { --bubble-color: var(--cursed); font-family: "Flavors", cursive; }
@@ -434,6 +439,14 @@ dfn[currentmode="business"] {
     --dfn-f: var(--business);
     font-family: "SUSE";
     font-size: 1.7em;
+}
+
+dfn[currentmode="office"] {
+    --dfn-c: #455a64;
+    --dfn-f: var(--office);
+    background: #eceff1;
+    font-family: "Courier Prime", monospace;
+    font-size: 1.5em;
 }
 
 dfn[currentmode="insta"] {
@@ -488,6 +501,10 @@ dfn[currentmode="techbro"] {
 
 .toast.business {
     background: blue;
+}
+
+.toast.office {
+    background: var(--office);
 }
 
 .toast.insta {

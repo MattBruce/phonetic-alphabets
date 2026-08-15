@@ -4,10 +4,11 @@ A playful, interactive web application that converts text into various themed ph
 
 ## 🌟 Features
 
-- **Themed Alphabets**: Switch between six distinct modes:
+- **Themed Alphabets**: Switch between seven distinct modes:
   - **Standard**: The classic NATO phonetic alphabet (Alpha, Bravo, Charlie...).
   - **Hipster ☕**: Trendy foods and lifestyle items (Açai, Burrata, Chia...).
   - **Business 💼**: Corporate buzzwords and jargon (Actionable, Blue-sky, Synergy...).
+  - **Office 📎**: Passive-aggressive workplace communications (As-per-my-last-email, Blocked-on-calendar, Circling-back...).
   - **Insta 💖**: Social media and influencer terminology (Authentic-self, Boho, Curated...).
   - **Techbro 🚀**: Startup and VC terminology (AI-first, Blockchain, Disrupt...).
   - **Cursed 👹**: Words with silent or confusing leading letters (Aisle, Bdellium, Pterodactyl...).
@@ -25,6 +26,7 @@ Each mode features unique speech patterns and voice selection to match its theme
 - **Standard**: Clear, neutral delivery with standard NATO timing.
 - **Hipster ☕**: Laid-back, slightly higher-pitched voice with relaxed pacing.
 - **Business 💼**: Professional, assertive tone with efficient, "synergistic" timing.
+- **Office 📎**: Flat, polite, bureaucratic monotone delivery with sighing pauses.
 - **Insta 💖**: High-energy, "up-talk" delivery with rising intonation and sparkle-inspired pauses.
 - **Techbro 🚀**: Fast-paced, disruptive delivery with a focus on "high-growth" verbal speed.
 - **Cursed 👹**: Slow, unsettling delivery with deep pitch and glitched, unpredictable pauses.
@@ -37,10 +39,10 @@ Simply open `index.html` in any modern web browser. No build steps or dependenci
 
 You can pre-configure the application using the following URL parameters:
 
-- `mode`: Set the initial alphabet mode (`standard`, `hipster`, `business`, `insta`, `techbro`, or `cursed`).
+- `mode`: Set the initial alphabet mode (`standard`, `hipster`, `business`, `office`, `insta`, `techbro`, or `cursed`).
 - `text`: Pre-fill the input field with a specific string.
 
-**Example**: `index.html?mode=hipster&text=hello`
+**Example**: `index.html?mode=office&text=hello`
 
 ## 🛠️ Technology Stack
 
@@ -48,7 +50,7 @@ You can pre-configure the application using the following URL parameters:
 - **CSS3**: Advanced layouts (Grid, Flexbox), custom properties, and animations.
 - **JavaScript (ES6+)**: Vanilla JS for logic, DOM manipulation, and state management.
 - **Web Speech API**: Integrated `SpeechSynthesis` for custom-tailored vocal delivery.
-- **Google Fonts**: Custom typography for each mode (`SUSE`, `Tilt Neon`, `Glass Antiqua`, `Flavors`, `Dancing Script`, `Orbitron`).
+- **Google Fonts**: Custom typography for each mode (`SUSE`, `Tilt Neon`, `Glass Antiqua`, `Courier Prime`, `Flavors`, `Dancing Script`, `Orbitron`).
 
 ## 📁 Project Structure
 

@@ -211,6 +211,43 @@ export const phoneticModes = {
         "?": "(query)",
         "_": "(underscore)",
         "@": "(at)"
+    },
+    office: {
+        A: "As-per-my-last-email",
+        B: "Blocked-on-calendar",
+        C: "Circling-back",
+        D: "Defer-to-leadership",
+        E: "Escalated",
+        F: "Forwarding-without-comment",
+        G: "Gentle-reminder",
+        H: "Hard-stop",
+        I: "I-hope-this-helps",
+        J: "Just-following-up",
+        K: "Kind-regards",
+        L: "Leaving-early",
+        M: "Muted-on-zoom",
+        N: "Not-my-department",
+        O: "Out-of-office",
+        P: "Per-our-discussion",
+        Q: "Quick-question",
+        R: "Re-attaching-for-convenience",
+        S: "Silent-acknowledgement",
+        T: "Thanks-in-advance",
+        U: "Unsubscribe",
+        V: "Visibility",
+        W: "Working-from-home",
+        X: "Xerox-breakdown",
+        Y: "Yielding-my-time",
+        Z: "Zero-capacity",
+        " ": "(heavy sigh)",
+        "'": "(finger quotes)",
+        ".": "(hard stop)",
+        ",": "(pregnant pause)",
+        "-": "(boundary)",
+        "!": "(forced cheer)",
+        "?": "(passive aggression)",
+        "_": "(under the radar)",
+        "@": "(cc'ing your manager)"
     }
 };
 
@@ -240,6 +277,13 @@ export const prosodyProfiles = {
         word: { rate: 1.05, pitch: 0.95, pre: 0, post: 100 },
         bracket: { rate: 1.0, pitch: 1.0, pre: 120, post: 100 },
         raw: { rate: 1.05, pitch: 0.95, pre: 0, post: 60 },
+        bracketStrategy: "flat"
+    },
+
+    office: {
+        word: { rate: 0.95, pitch: 0.9, pre: 0, post: 130 },
+        bracket: { rate: 0.85, pitch: 0.8, pre: 220, post: 170 },
+        raw: { rate: 0.95, pitch: 0.85, pre: 0, post: 70 },
         bracketStrategy: "flat"
     },
 
